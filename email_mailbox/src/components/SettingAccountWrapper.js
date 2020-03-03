@@ -164,6 +164,7 @@ class SettingAccountWrapper extends Component {
 
     return (
       <SettingAccount
+        onChangePanel={this.props.onChangePanel}
         changePasswordPopupParams={this.state.changePasswordPopupParams}
         changeRecoveryEmailPopupParams={
           this.state.changeRecoveryEmailPopupParams
@@ -1035,6 +1036,7 @@ class SettingAccountWrapper extends Component {
 SettingAccountWrapper.propTypes = {
   devices: PropTypes.array,
   isHiddenSettingsPopup: PropTypes.bool,
+  onChangePanel: PropTypes.func,
   onDeleteDeviceData: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
