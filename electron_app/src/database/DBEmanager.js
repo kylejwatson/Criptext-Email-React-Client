@@ -1,7 +1,9 @@
 const {
   Account,
   AccountContact,
+  Alias,
   Contact,
+  CustomDomain,
   Email,
   EmailContact,
   EmailLabel,
@@ -1033,8 +1035,8 @@ const updateEmail = ({
     unsentDate,
     messageId
   });
-  const whereParam = id ? { id } : { key };
-  return Email().update(params, { where: whereParam, accountId });
+  const whereParam = id ? { id, accountId } : { key, accountId };
+  return Email().update(params, { where: whereParam });
 };
 
 const updateEmails = ({ accountId, ids, keys, unread, trashDate }, trx) => {
@@ -1397,6 +1399,56 @@ const getSessionRecordByRecipientIds = ({ accountId, recipientIds }) => {
   });
 };
 
+/* Alias
+----------------------------- */
+const createAlias = params => {
+  return Alias().create(params);
+};
+
+const updateAlias = ({ id, rowId, active, accountId }) => {
+  if (typeof active === 'undefined') return;
+  const whereParam = id ? { id, accountId } : { rowId, accountId };
+  return Alias().update({ active }, { where: whereParam });
+};
+
+const getAliasByParams = params => {
+  return Alias().findAll({ where: params }).then(aliases => {
+    return aliases.map(alias => alias.toJSON());
+  });
+};
+
+const deleteAliases = ({ ids, rowIds, accountId }) => {
+  if (typeof active === 'undefined') return;
+  const whereParam = ids
+    ? { id: ids, accountId }
+    : { rowId: rowIds, accountId };
+  return Alias().destroy({ where: whereParam });
+};
+
+/* CustomDomain
+----------------------------- */
+const createCustomDomain = params => {
+  return CustomDomain().create(params);
+};
+
+const updateCustomDomain = ({ id, rowId, validated, accountId }) => {
+  if (typeof validated === 'undefined') return;
+  const whereParam = id ? { id, accountId } : { rowId, accountId };
+  return CustomDomain().update({ validated }, { where: whereParam });
+};
+
+const getCustomDomainByParams = params => {
+  return CustomDomain().findAll({ where: params });
+};
+
+const deleteCustomDomains = ({ ids, rowIds, accountId }) => {
+  if (typeof active === 'undefined') return;
+  const whereParam = ids
+    ? { id: ids, accountId }
+    : { rowId: rowIds, accountId };
+  return CustomDomain().destroy({ where: whereParam });
+};
+
 /* Functions
 ----------------------------- */
 const cleanDataBase = async recipientId => {
@@ -1704,8 +1756,10 @@ module.exports = {
   cleanDataLogout,
   cleanKeys,
   createAccount,
+  createAlias,
   createContact,
   createContactsIfOrNotStore,
+  createCustomDomain,
   createEmail,
   createEmailLabel,
   createFeedItem,
@@ -1715,6 +1769,8 @@ module.exports = {
   createSettings,
   deleteAccountNotSignalRelatedData,
   defineActiveAccountById,
+  deleteAliases,
+  deleteCustomDomains,
   deleteDatabase,
   deleteEmailsByIds,
   deleteEmailByKeys,
@@ -1729,6 +1785,7 @@ module.exports = {
   getDB,
   getAccount,
   getAccountByParams,
+  getAliasByParams,
   getAllAccounts,
   getAllContacts,
   getAllLabels,
@@ -1736,6 +1793,7 @@ module.exports = {
   getContactByEmails,
   getContactByIds,
   getContactsByEmailId,
+  getCustomDomainByParams,
   getEmailByKey,
   getEmailLabelsByEmailId,
   getEmailsByArrayParam,
@@ -1765,8 +1823,10 @@ module.exports = {
   rawCheckPin,
   resetKeyDatabase,
   updateAccount,
+  updateAlias,
   updateContactByEmail,
   updateContactSpamScore,
+  updateCustomDomain,
   updateEmail,
   updateEmails,
   updateFeedItems,
