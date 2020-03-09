@@ -1568,6 +1568,17 @@ ipcRenderer.on('lost-network-connection', () => {
 
 /* Window events
   ----------------------------- */
+export const sendAliasSuccessStatusMessage = active => {
+  const message = active
+    ? Messages.success.aliasActivated
+    : Messages.success.aliasDeactivated;
+  const messageData = {
+    ...message,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendOpenEventErrorMessage = () => {
   const messageData = {
     ...Messages.error.sendOpenEvent,
