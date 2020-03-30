@@ -7,7 +7,7 @@ import {
   deleteAddress,
   deleteAliases,
   deleteAliasesByDomain,
-  deleteCustomDomain, //database
+  deleteCustomDomains, //database
   deleteDomain, // api
   setReplyTo,
   setTwoFactorAuth,
@@ -824,6 +824,7 @@ class SettingAccountWrapper extends Component {
           error: string.popups.delete_alias.errors.timeout
         }
       });
+      return;
     }
 
     switch (res.status) {
@@ -879,7 +880,7 @@ class SettingAccountWrapper extends Component {
       case 200: {
         this.handleClosePopup();
         this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_CUSTOM_DOMAIN);
-        await deleteCustomDomain(domain); //database //delete the custom domain associated //
+        await deleteCustomDomains(domain); //database //delete the custom domain associated //
         await deleteAliasesByDomain({ domain }); // delete addresses in database
         this.props.onRemoveCustomDomain(domain);
         break;
