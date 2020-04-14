@@ -116,7 +116,8 @@ class SettingAccountWrapper extends Component {
       deleteAliasParams: {
         addressId: undefined,
         email: undefined,
-        error: undefined
+        error: undefined,
+        remaining: undefined
       },
       deleteCustomDomainsParams: {
         domain: undefined,
@@ -441,7 +442,8 @@ class SettingAccountWrapper extends Component {
           deleteAliasParams: {
             addressId: undefined,
             email: undefined,
-            error: undefined
+            error: undefined,
+            remaining: undefined
           }
         };
         break;
@@ -476,7 +478,8 @@ class SettingAccountWrapper extends Component {
       deleteAliasParams: {
         addressId: rowId,
         email,
-        error: undefined
+        error: undefined,
+        remaining: undefined
       }
     });
   };
@@ -824,7 +827,8 @@ class SettingAccountWrapper extends Component {
       this.setState({
         deleteAliasParams: {
           ...this.state.deleteAliasParams,
-          error: string.popups.delete_alias.errors.timeout
+          error: string.popups.delete_alias.errors.timeout,
+          remaining: undefined
         }
       });
       return;
@@ -838,13 +842,18 @@ class SettingAccountWrapper extends Component {
         this.props.onRemoveAlias(addressId, email);
         break;
       }
-      case 400: {
+      case 428: {
+        const daysLeft = res.body.daysLeft || 15;
         this.setState({
           deleteAliasParams: {
             ...this.state.deleteAliasParams,
             error: string.formatString(
               string.popups.delete_alias.errors.cannot,
               appDomain
+            ),
+            remaining: string.formatString(
+              string.popups.delete_alias.errors.remaining,
+              daysLeft
             )
           }
         });
@@ -857,7 +866,8 @@ class SettingAccountWrapper extends Component {
             error: string.formatString(
               string.popups.delete_alias.errors.unknown,
               res.status
-            )
+            ),
+            remaining: undefined
           }
         });
       }
